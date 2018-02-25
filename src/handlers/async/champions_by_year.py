@@ -25,7 +25,26 @@ class ChampionsByYearHandler(BaseHandler):
     all_champions = sorted([c for c in all_champions
                             if c.event == ndb.Key(Event, str(event_id))],
                            key = lambda c: c.championship.id(), reverse=True)
+    championship_keys = [champion.championship for champion in all_champions]
+    championships = ndb.get_multi(championship_keys)
+    competition_keys = [championship.competition
+                        for championship in championships
+                        if championship]
+    winner_keys = [winner
+                   for champion in all_champions
+                   for winner in champion.champions]
+    entities_by_id = {e.key.id() : e
+                      for e in ndb.get_multi(competition_keys + winner_keys)
+                      if e}
+
+    # Pass the template a list of pairs of competitions and winners, to save
+    # datastore RPCs.
+    competitions_and_winners = []
+    for champion, championship in zip(all_champions, championships):
+      competitions_and_winners.append((
+          entities_by_id[championship.competition.id()],
+          [entities_by_id[winner_key.id()] for winner_key in champion.champions]))
     self.response.write(template.render({
         'c': common.Common(self),
-        'champions': all_champions,
+        'competitions_and_winners': competitions_and_winners,
     }))

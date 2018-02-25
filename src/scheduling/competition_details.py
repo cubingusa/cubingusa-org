@@ -5,22 +5,27 @@ from google.appengine.ext import ndb
 
 from src.models.scheduling.round import ScheduleRound
 from src.models.scheduling.schedule import Schedule
+from src.models.scheduling.stage import ScheduleStage
 from src.models.scheduling.time_block import ScheduleTimeBlock
 from src.models.wca.rank import RankAverage
 from src.models.wca.rank import RankSingle
 
 
 class GroupedTimeBlock(object):
-  def __init__(self, t):
+  def __init__(self, t, r, s):
     self._time_blocks = [t]
     self._start_time = t.GetStartTime()
     self._end_time = t.GetEndTime()
     self._stage_keys = set([t.stage])
+    self._stages = [s]
+    self._round = r
 
-  def AddTimeBlock(self, t):
+  def AddTimeBlock(self, t, s):
     self._time_blocks.append(t)
     self._end_time = max(self._end_time, t.GetEndTime())
-    self._stage_keys.add(t.stage)
+    if s.key not in self._stage_keys:
+      self._stage_keys.add(s.key)
+      self._stages.append(s)
 
   def GetStartTime(self):
     return self._start_time
@@ -35,10 +40,10 @@ class GroupedTimeBlock(object):
         self._end_time.strftime('%I:%M %p').lstrip('0'))
 
   def GetRound(self):
-    return self._time_blocks[0].round.get()
+    return self._round
 
   def GetStages(self):
-    return sorted([s.get() for s in self._stage_keys], key=lambda s: s.number)
+    return sorted(self._stages, key=lambda s: s.number)
 
 
 class RoundDetails(object):
@@ -49,20 +54,20 @@ class RoundDetails(object):
   def GetRound(self):
     return self._r
 
-  def AddTimeBlock(self, t):
+  def AddTimeBlock(self, t, s):
     if (self._grouped_time_blocks and
         t.GetStartTime() < self._grouped_time_blocks[-1].GetEndTime()):
-      self._grouped_time_blocks[-1].AddTimeBlock(t)
+      self._grouped_time_blocks[-1].AddTimeBlock(t, s)
     else:
-      self._grouped_time_blocks.append(GroupedTimeBlock(t))
+      self._grouped_time_blocks.append(GroupedTimeBlock(t, self._r, s))
 
   def GetGroupedTimeBlocks(self):
     return self._grouped_time_blocks
     
 
 class EventDetails(object):
-  def __init__(self, event_key):
-    self._event_key = event_key
+  def __init__(self):
+    self._event = None
     self._rounds = {}
     self._qualifying_time = None
     self._qualifying_time_is_average = False
@@ -71,11 +76,14 @@ class EventDetails(object):
   def AddRound(self, r):
     self._rounds[r.number] = RoundDetails(r)
 
-  def AddTimeBlock(self, t):
-    self._rounds[t.round.get().number].AddTimeBlock(t)
+  def AddTimeBlock(self, t, r, s):
+    self._rounds[r.number].AddTimeBlock(t, s)
 
   def GetEvent(self):
-    return self._event_key.get()
+    return self._event
+
+  def SetEvent(self, event):
+    self._event = event
 
   def GetRounds(self):
     return self._rounds.values()
@@ -107,20 +115,35 @@ class CompetitionDetails(object):
     if not self.schedule:
       return
 
-    self.events = {}
+    self.event_details = {}
     self.event_keys = []
     self.stage_ids = set()
+
+    rounds_by_id = {}
+    stages_by_id = {
+        stage.key.id() : stage
+        for stage in ScheduleStage.query(ScheduleStage.schedule == self.schedule.key).iter()
+    }
+
     for r in ScheduleRound.query(ScheduleRound.schedule == self.schedule.key).iter():
-      if r.event.id() not in self.events:
-        self.events[r.event.id()] = EventDetails(r.event)
+      if r.event.id() not in self.event_details:
+        self.event_details[r.event.id()] = EventDetails()
         self.event_keys.append(r.event)
-      self.events[r.event.id()].AddRound(r)
+      self.event_details[r.event.id()].AddRound(r)
+      rounds_by_id[r.key.id()] = r
+
+    # Load the events from the datastore.
+    events_by_id = {e.key.id() : e
+                    for e in ndb.get_multi(self.event_keys)}
+    for event_id, event in events_by_id.iteritems():
+      self.event_details[event_id].SetEvent(event)
 
     for t in (ScheduleTimeBlock.query(ndb.AND(ScheduleTimeBlock.schedule == self.schedule.key,
                                               ScheduleTimeBlock.staff_only == False))
                                .order(ScheduleTimeBlock.start_time)
                                .iter()):
-      self.events[t.round.get().event.id()].AddTimeBlock(t)
+      r = rounds_by_id[t.round.id()]
+      self.event_details[r.event.id()].AddTimeBlock(t, r, stages_by_id[t.stage.id()])
       self.stage_ids.add(t.stage.id())
     if user and user.wca_person:
       self.ranks_single = {
@@ -136,28 +159,28 @@ class CompetitionDetails(object):
   def SetQualifyingTime(self, event_id, time, is_average):
     ranks_dict = self.ranks_average if is_average else self.ranks_single
     is_qualified = event_id in ranks_dict and ranks_dict[event_id].best <= time
-    self.events[event_id].SetQualifyingTime(time, is_average, is_qualified)
+    self.event_details[event_id].SetQualifyingTime(time, is_average, is_qualified)
 
   def GetEvents(self):
-    return sorted(self.events.values(), key=lambda e: e.GetEvent().rank)
+    return sorted(self.event_details.values(), key=lambda e: e.GetEvent().rank)
 
   def GetWcaEvents(self):
     return [e.GetEvent() for e in self.GetEvents()]
 
   def HasQualifyingTimes(self):
-    for e in self.events.itervalues():
+    for e in self.event_details.itervalues():
       if e.GetQualifyingTime():
         return True
     return False
 
   def HasMultipleRoundEvents(self):
-    for e in self.events.itervalues():
+    for e in self.event_details.itervalues():
       if len(e.GetRounds()) > 1:
         return True
     return False
 
   def HasCutoffs(self):
-    for e in self.events.itervalues():
+    for e in self.event_details.itervalues():
       for r in e.GetRounds():
         if r.GetRound().cutoff:
           return True
@@ -165,7 +188,7 @@ class CompetitionDetails(object):
 
   def TimeBlocksByDay(self):
     time_blocks_dict = collections.defaultdict(list)
-    for e in self.events.itervalues():
+    for e in self.event_details.itervalues():
       for r in e.GetRounds():
         for t in r.GetGroupedTimeBlocks():
           time_blocks_dict[t.GetStartTime().date()].append(t)
