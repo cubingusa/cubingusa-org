@@ -74,7 +74,7 @@ app = webapp2.WSGIApplication([
   # Admin
   webapp2.Route('/admin/edit_users',
                 handler=BasicHandler('admin/edit_users.html',
-                                     permitted_roles=Roles.AllRoles()),
+                                     permitted_roles=Roles.AdminRoles()),
                 name='admin_edit_users'),
   webapp2.Route('/admin/upload_document', handler=UploadDocumentHandler,
                 name='upload_document'),
