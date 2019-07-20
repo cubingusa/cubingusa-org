@@ -1,4 +1,6 @@
 import datetime
+import calendar
+import time
 import os
 import webapp2
 
@@ -22,6 +24,12 @@ class Common(object):
     self.formatters = formatters
     self.include_wca_disclaimer = handler.IncludeWcaDisclaimer()
     self.year = datetime.date.today().year
+
+    if self.user:
+      last_login_epoch = (self.user.last_login - datetime.datetime(1970,1,1)).total_seconds()
+      now_epoch = calendar.timegm(time.gmtime())
+      if now_epoch - last_login_epoch < 1:
+        self.just_logged_in = True
 
   def uri_matches(self, path):
     return self.uri.endswith(path)
