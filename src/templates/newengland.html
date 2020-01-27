@@ -1,58 +1,36 @@
 {% import "components/css.html" as css %}
 {% extends "base.html" %}
-{% block title%}New England Mailing List{% endblock %}
+{% block title%}New England Cubing{% endblock %}
 {% block content %}
   <div class="container">
     <div class="card">
       <div class="card-body">
         <div class="card-title">
-          <h1>New England Mailing List</h1>
+          <h1>New England Cubing</h1>
         </div>
         <div class="card-text">
-          <p>Note: this mailing list is operated by local Delegates, not by CubingUSA. CubingUSA is not responsible for this mailing list, and there is no guarantee that every competition will be posted here.</p>
-          <!-- Begin MailChimp Signup Form -->
-            <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
-            <style type="text/css">
-              #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
-              /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
-                 We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
-            </style>
-            <div id="mc_embed_signup">
-            <form action="https://cubingusa.us18.list-manage.com/subscribe/post?u=c3c2058865a8261cbddd1295f&amp;id=6775780a65" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-                <div id="mc_embed_signup_scroll">
-              <h2>Get notifications when competitions are announced in New England</h2>
-            <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
-            <div class="mc-field-group">
-              <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
-            </label>
-              <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
-            </div>
-            <div class="mc-field-group">
-              <label for="mce-FNAME">First Name </label>
-              <input type="text" value="" name="FNAME" class="" id="mce-FNAME">
-            </div>
-            <div class="mc-field-group">
-              <label for="mce-LNAME">Last Name </label>
-              <input type="text" value="" name="LNAME" class="" id="mce-LNAME">
-            </div>
-            <div class="mc-field-group size1of2">
-              <label for="mce-BIRTHDAY-month">Birthday </label>
-              <div class="datefield">
-                <span class="subfield monthfield"><input class="birthday " type="text" pattern="[0-9]*" value="" placeholder="MM" size="2" maxlength="2" name="BIRTHDAY[month]" id="mce-BIRTHDAY-month"></span> /
-                <span class="subfield dayfield"><input class="birthday " type="text" pattern="[0-9]*" value="" placeholder="DD" size="2" maxlength="2" name="BIRTHDAY[day]" id="mce-BIRTHDAY-day"></span>
-                <span class="small-meta nowrap">( mm / dd )</span>
-              </div>
-            </div>  <div id="mce-responses" class="clear">
-                <div class="response" id="mce-error-response" style="display:none"></div>
-                <div class="response" id="mce-success-response" style="display:none"></div>
-              </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_c3c2058865a8261cbddd1295f_6775780a65" tabindex="-1" value=""></div>
-                <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
-                </div>
-            </form>
-            </div>
+          <h2>Welcome!</h2>
+          <p>
+            New England has a vibrant cubing community with competitions happening regularly in many areas. We are focused on facilitating enjoyable competitions in the region, and bringing events to new regions. If you have any feedback or suggestions, please contact <a href="mailto:newengland@cubingusa.org">newengland@cubingusa.org</a>. If you're interested in having a competition in your area, please take a look at the <a href="#">information for organizers</a> page.
+          </p>
 
-            <!--End mc_embed_signup-->
+          <p>
+              <a class="btn btn-primary" href="{{ c.uri_for('newengland-mailing') }}" role="button">Get notified about upcoming competitions</a>
+              <a class="btn btn-primary" href="{{ c.uri_for('newengland-organizing') }}" role="button">Information for organizers</a>
+          </p>
+          <br />
+          <h2>Delegates</h2>
+          <p>
+            The region lead for New England is Matthew McMillan <a href="mailto:mmcmillan@worldcubeassociation.org" class="badge badge-primary"><i class="fa fa-envelope"></i> mmcmillan@worldcubeassociation.org</a>, who should be contacted with any concerns about the region as a whole. The Delegates in New England are:
+          </p>
+
+          <ul>
+            <li>Arthur Adams <a href="mailto:aadams@worldcubeassociation.org" class="badge badge-primary"><i class="fa fa-envelope"></i> aadams@worldcubeassociation.org</a> - Connecticut</li>
+            <li>JP Bulman <a href="mailto:jbulman@worldcubeassociation.org" class="badge badge-primary"><i class="fa fa-envelope"></i> jbulman@worldcubeassociation.org</a> - Massachusetts</li>
+            <li>Matthew McMillan <a href="mailto:mmcmillan@worldcubeassociation.org" class="badge badge-primary"><i class="fa fa-envelope"></i> mmcmillan@worldcubeassociation.org</a> - Massachusetts</li>
+            <li>Micah Stairs <a href="mailto:mstairs@worldcubeassociation.org" class="badge badge-primary"><i class="fa fa-envelope"></i> mstairs@worldcubeassociation.org</a> - Massachusetts</li>
+            <li>Tim Reynolds <a href="mailto:treynolds@worldcubeassociation.org" class="badge badge-primary"><i class="fa fa-envelope"></i> treynolds@worldcubeassociation.org</a> - Massachusetts</li>
+          </ul>
         </div>
       </div>
     </div>

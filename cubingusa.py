@@ -59,6 +59,8 @@ app = webapp2.WSGIApplication([
                 handler=ContactHandler(AppSettings.Get().contact_email, 'contact.html', 'CubingUSA'),
                 name='contact'),
   webapp2.Route('/newengland', handler=BasicHandler('newengland.html'), name='newengland'),
+  webapp2.Route('/newengland/mailing', handler=BasicHandler('newengland-mailing-list.html'), name='newengland-mailing'),
+  webapp2.Route('/newengland/organizing', handler=BasicHandler('newengland-organizing.html'), name='newengland-organizing'),
   webapp2.Route('/app', handler=webapp2.RedirectHandler, defaults={
                     '_uri': 'https://cubingusa.org/nationals/2019/app'}),
   webapp2.Route('/results', handler=webapp2.RedirectHandler, defaults={
