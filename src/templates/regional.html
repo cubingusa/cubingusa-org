@@ -24,7 +24,10 @@
                  role="button">Read More...</a>
             </p>
             <div class="desktop-only" id="moreRegionalsInfo">
-              <p>Just like CubingUSA Nationals, our Regional Championships are open to all competitors.  However, the title of Regional Champion will be awarded to the top-ranked competitor who lives in that region.  In order to be eligible to win a title, you need to <a href="{{ c.uri_for('login') }}">log in</a> to the CubingUSA website with your WCA account and <a href="{{ c.uri_for('edit_user') }}">select</a> your home state before the competition. We will have more details about residency verification soon. Please <a href="{{ c.uri_for('contact') }}">contact</a> us if you have any questions about what state you can represent.</p>
+              <p>Just like CubingUSA Nationals, our Regional Championships are open to all competitors.  However, the title of Regional Champion will be awarded to the top-ranked competitor who lives in that region.  In order to be eligible to win a title, you need to <a href="{{ c.uri_for('login') }}">log in</a> to the CubingUSA website with your WCA account and <a href="{{ c.uri_for('edit_user') }}">select</a> your home state before the competition. 
+                
+              <p>Learn more about our <a href="{{ c.uri_for('regional_title_policy') }}">Regional Championship Title Rules</a>.</p>
+
               {% if regions_missing_championships %}
                 <p>We're still working to finalize the location and dates of this year's championships.  Please check back here for details!</p>
               {% endif %}

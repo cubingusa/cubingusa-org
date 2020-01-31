@@ -1,0 +1,61 @@
+{% import "components/css.html" as css %}
+{% extends "base.html" %}
+{% block title%}Regional Title Policy{% endblock %}
+{% block content %}
+  <div class="container">
+    <div class="card">
+      <div class="card-body">
+        <div class="card-title">
+          <h1>Regional Championship Title Rules</h3>
+        </div>
+        <div class="card-text">
+
+            <p>This policy applies to all <a href="{{ c.uri_for('competitions_regional') }}">CubingUSA Regional Championships</a>.</p>
+            
+            <p>Podium (first, second, and third place) and accompanying awards at Regional and State Championships are open to all competitors regardless of residency.</p>
+            
+            <p><strong>Regional Champion</strong> titles are granted to the top competitor in each event with an eligible residency.</p>
+            
+            <h3>Declare Residency</h3>
+            
+            <p><a href="{{ c.uri_for('login') }}">Log in</a> and <a href="{{ c.uri_for('edit_user') }}">select your residency</a> before the declaration deadline (typically the night before the competition starts) to be eligible for Regional Champion titles.</p>
+            
+            <p>Within 24 hours, you should see your eligibility status reflected in the Psych Sheet pages of the <a href="{{ c.uri_for('competitions_regional') }}">regional championships</a>.</p>
+            
+            <p>You can change your residency if you move, but you may only be eligible for Regional Champion titles at one Regional per calendar year.</p>
+            
+            <p>You may still attend and win awards and place on the podium at Regional Championships where are you not eligible for Regional Champion titles.</p>
+            
+            <h3>Bring Proof of Residency</h3>
+            
+            <p>In addition to declaring in advance, you will need to bring proof of residency to the event to claim a Regional Champion title.</p>
+            
+            <p>Note that title eligibility is based on residency, not citizenship.</p>
+            
+            <p>Proof of residency may be in two forms: Proof of residency for the competitor Proof of residency for the competitor&rsquo;s parent or guardian, with a statement from the parent or guardian that the competitor lives with them.</p>
+            <p>Pre-approved forms of residency verification include:
+            </p>
+            <ul>
+                <li>State Driver&rsquo;s License or State ID (must be current)</li>
+                <li>School or college ID; must have EITHER:</li>
+                    <ul>
+                        <li>expiration date in the future OR</li>
+                        <li>issue date only, within 4 years</li>
+                    </ul>
+                <li>School or college transcript (within 6 months)</li>
+                <li>Utility bill (within 90 days) (no cell phone bills accepted)</li>
+                <li>Lease or Section 8 agreement (must be current)</li>
+                <li>Vehicle registration (must be current)</li>
+                <li>Homeowner&rsquo;s, renter&rsquo;s, or vehicle insurance policy (must be current)</li>
+                <li>Mortgage statement (within 90 days)</li>
+                <li>Property tax statement (within 1 year)</li>
+            </ul>
+            
+            <p>Competitors, parents, or guardians who would like to present an alternate form of residency verification not listed above <strong>should contact the organizers before the competition</strong> to request an exception. CubingUSA may or may not accept other forms of documentation at its sole discretion.</p>
+            
+            <p>Please see the full Regional and State Championship Award and Title Policy on our <a href="{{ c.uri_for('documents') }}">Documents</a> page for details. </p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
