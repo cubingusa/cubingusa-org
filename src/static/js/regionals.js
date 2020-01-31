@@ -17,7 +17,7 @@ var regionalsModule = (function() {
           }
         }
       };
-      var uri = '/async/champions_by_region/' + event_id + '/regional/2018';
+      var uri = '/async/champions_by_region/' + event_id + '/regional/2019';
       req.open('GET', uri);
       req.send();
     },
