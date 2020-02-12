@@ -1,5 +1,5 @@
 GoogleAppEngineCloudStorageClient==1.9.22.1
-Jinja2==2.10
+Jinja2==2.10.1
 pytz==2017.3
 python-dateutil==2.6.1
 google-api-python-client==1.6.5
